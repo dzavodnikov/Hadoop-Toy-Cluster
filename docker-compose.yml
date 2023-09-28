@@ -1,0 +1,172 @@
+version: "3.8"
+
+networks:
+    toy-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/16
+                  gateway: 172.18.0.1
+
+services:
+    zookeeper1:
+        image: bitnami/zookeeper:3.9.0
+        container_name: toy-zookeeper1
+        hostname: zookeeper1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.1.1
+        environment:
+            - ALLOW_ANONYMOUS_LOGIN=yes
+        volumes:
+            - ./data/zookeeper1/:/bitnami/zookeeper/data/
+
+    master1:
+        build:
+            context: docker
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_master.sh
+        depends_on:
+            - zookeeper1
+        container_name: toy-master1
+        environment:
+            CLUSTER_NAME: toy
+        hostname: master1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.2.1
+        extra_hosts:
+            # To avoid problem when HMaster passed to HRegionServers a different hostnames to use.
+            - worker1.toy:172.18.3.1
+            - worker2.toy:172.18.3.2
+            - worker3.toy:172.18.3.3
+        ports:
+            - 9870:9870 # HDFS NameNode
+            - 8088:8088 # YARN ResourceManager
+            - 19888:19888 # Hadoop MapReduce JobHistory Server
+            - 16010:16010 # HBase Web UI
+            - 9090:9090 # HBase Thrift client
+            - 9091:9091 # HBase Thrift Web UI
+            - 8090:8090 # HBase REST client
+            - 8091:8091 # HBase REST Web UI
+        volumes:
+            # Basic scripts.
+            - ./docker/entrypoint_master.sh:/entrypoint_master.sh
+            - ./docker/healthcheck.sh:/healthcheck.sh
+            - ./docker/healthcheck_master.sh:/healthcheck_master.sh
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/mapred-site.xml:/hadoop/etc/hadoop/mapred-site.xml
+            - ./configs/hadoop/yarn-site.xml:/hadoop/etc/hadoop/yarn-site.xml
+            - ./configs/hadoop/slaves:/hadoop/etc/hadoop/slaves
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/hbase/conf/hbase-site.xml
+            - ./configs/hbase/regionservers:/hbase/conf/regionservers
+            # Data.
+            - ./data/master1/hadoop/:/data/hadoop/
+            # Log bind.
+            - ./logs/master1/hadoop/:/hadoop/logs/
+            - ./logs/master1/hbase/:/hbase/logs/
+        healthcheck:
+            test: /healthcheck_master.sh
+
+    worker1:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker1
+        hostname: worker1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.1
+        ports:
+            - 8043:8042 # YARN NodeManager
+            - 16031:16030 # HBase Web UI
+        volumes:
+            # Basic scripts.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            - ./docker/healthcheck.sh:/healthcheck.sh
+            - ./docker/healthcheck_worker.sh:/healthcheck_worker.sh
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/yarn-site.xml:/hadoop/etc/hadoop/yarn-site.xml
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/hbase/conf/hbase-site.xml
+            # Data.
+            - ./data/worker1/hadoop/:/data/hadoop/
+            # Log bind.
+            - ./logs/worker1/hadoop/:/hadoop/logs/
+            - ./logs/worker1/hbase/:/hbase/logs/
+        healthcheck:
+            test: /healthcheck_worker.sh
+
+    worker2:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker2
+        hostname: worker2.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.2
+        ports:
+            - 8044:8042 # YARN NodeManager
+            - 16032:16030 # HBase Web UI
+        volumes:
+            # Basic scripts.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            - ./docker/healthcheck.sh:/healthcheck.sh
+            - ./docker/healthcheck_worker.sh:/healthcheck_worker.sh
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/yarn-site.xml:/hadoop/etc/hadoop/yarn-site.xml
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/hbase/conf/hbase-site.xml
+            # Data.
+            - ./data/worker2/hadoop/:/data/hadoop/
+            # Log bind.
+            - ./logs/worker2/hadoop/:/hadoop/logs/
+            - ./logs/worker2/hbase/:/hbase/logs/
+        healthcheck:
+            test: /healthcheck_worker.sh
+
+    worker3:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker3
+        hostname: worker3.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.3
+        ports:
+            - 8045:8042 # YARN NodeManager
+            - 16033:16030 # HBase Web UI
+        volumes:
+            # Basic scripts.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            - ./docker/healthcheck.sh:/healthcheck.sh
+            - ./docker/healthcheck_worker.sh:/healthcheck_worker.sh
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/yarn-site.xml:/hadoop/etc/hadoop/yarn-site.xml
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/hbase/conf/hbase-site.xml
+            # Data.
+            - ./data/worker3/hadoop/:/data/hadoop/
+            # Log bind.
+            - ./logs/worker3/hadoop/:/hadoop/logs/
+            - ./logs/worker3/hbase/:/hbase/logs/
+        healthcheck:
+            test: /healthcheck_worker.sh
