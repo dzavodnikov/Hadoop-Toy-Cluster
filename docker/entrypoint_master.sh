@@ -25,6 +25,9 @@ yarn --daemon start proxyserver \
 mapred --daemon start historyserver \
     > /hadoop/logs/historyserver.log 2>&1
 
+# Azkaban starting.
+cd azkaban && ./bin/start-solo.sh
+
 # HBase starting.
 # See:
 #   https://hbase.apache.org/2.4/book.html#_hbase_managed_zookeeper_configuration

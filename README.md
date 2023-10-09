@@ -8,6 +8,7 @@ It includes following services:
 
 -   [Apache Zookeeper 3.9.0](https://zookeeper.apache.org/doc/r3.9.0/)
 -   [Apache Hadoop 3.3.6](https://hadoop.apache.org/docs/r3.3.6/)
+-   [Azkaban 4.0.0](https://azkaban.readthedocs.io/)
 -   [Apache HBase 2.4](https://hbase.apache.org/2.4/book.html)
 
 > Note:
@@ -36,6 +37,7 @@ Current state of all nodes will be saved at [data](/data) directory.
     -   Hadoop HDFS [NameNode](http://localhost:9870/explorer.html)
     -   Hadoop YARN [ResourceManager](http://localhost:8088/cluster/nodes/)
     -   Hadoop [MapReduce JobHistory Server](http://localhost:19888/jobhistory/app)
+    -   Hadoop [Azkaban](http://localhost:8081/) (username/password is `azkaban/azkaban`)
     -   HBase Master [Web UI](http://localhost:16010/)
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)
