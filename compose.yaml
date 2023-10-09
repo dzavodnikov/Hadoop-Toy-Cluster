@@ -35,6 +35,7 @@ services:
             - 9870:9870 # HDFS NameNode
             - 8088:8088 # YARN ResourceManager
             - 19888:19888 # Hadoop MapReduce JobHistory Server
+            - 8081:8081 # Azkaban
             - 16010:16010 # HBase Web UI
             - 9090:9090 # HBase Thrift client
             - 9091:9091 # HBase Thrift Web UI
@@ -51,13 +52,17 @@ services:
             - ./configs/hadoop/mapred-site.xml:/hadoop/etc/hadoop/mapred-site.xml
             - ./configs/hadoop/yarn-site.xml:/hadoop/etc/hadoop/yarn-site.xml
             - ./configs/hadoop/slaves:/hadoop/etc/hadoop/slaves
+            # Azkaban configs.
+            - ./configs/azkaban.properties:/azkaban/conf/azkaban.properties
             # HBase configs.
             - ./configs/hbase/hbase-site.xml:/hbase/conf/hbase-site.xml
             - ./configs/hbase/regionservers:/hbase/conf/regionservers
             # Data.
             - ./data/master1/hadoop/:/data/hadoop/
+            - ./data/master1/azkaban/:/data/azkaban/
             # Log bind.
             - ./logs/master1/hadoop/:/hadoop/logs/
+            - ./logs/master1/azkaban/:/azkaban/local/
             - ./logs/master1/hbase/:/hbase/logs/
         healthcheck:
             test: /healthcheck_master.sh
