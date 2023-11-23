@@ -1,15 +1,15 @@
-FROM alpine:3.18
+FROM oraclelinux:9
 
 # For testing use:
-#   % docker run --rm -it --entrypoint ash alpine:3.18
+#   % docker run --rm -it --entrypoint bash oraclelinux:9
 
-RUN apk add bash curl
+RUN dnf -y install wget hostname
 
 # See:
 #   https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions/
 #   https://hbase.apache.org/book.html#basic.prerequisites
-RUN apk add openjdk8
-ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
+RUN dnf -y install java-11-openjdk
+ENV JAVA_HOME=/usr/lib/jvm/jre
 
 # Hadoop
 RUN wget http://archive.apache.org/dist/hadoop/core/hadoop-3.3.6/hadoop-3.3.6.tar.gz
