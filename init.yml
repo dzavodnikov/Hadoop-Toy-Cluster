@@ -1,0 +1,12 @@
+rest: master1.cup:8090
+tables:
+    - atlas-blobs,         -
+    - atlas-counters,      fixed, udm
+    - atlas-dns-details,   -
+    - atlas-dns-digest,    -
+    - atlas-hophosts,      -
+    - atlas-ipaddress,     -
+    - atlas-latest,        -
+    - atlas-ping-details,  -
+    - atlas-ping-digest,   -
+    - atlas-traffic,       -
