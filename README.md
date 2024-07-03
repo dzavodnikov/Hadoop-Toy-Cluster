@@ -51,6 +51,32 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   YARN [NodeManager](http://localhost:8342/)
     -   HBase RegionServer [Web UI](http://localhost:16330/)
 
+## Run code examples on cluster
+
+1.  Go to [examples](./examples) folder.
+
+2.  Deploy examples:
+
+    ```sh
+    $ ./deploy.sh
+    ```
+
+    > Note:
+    > This script build examples and upload them to local Maven cache (`~/.m2/repository`).
+    > Then it download them and push to the cluster.
+
+3.  Run some file:
+
+    ```sh
+    $ ./mapreduce.sh
+    ```
+
+    or
+
+    ```sh
+    $ ./hbase.sh
+    ```
+
 ## License
 
 Distributed under MIT License.
