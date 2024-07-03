@@ -3,3 +3,12 @@
 
 # Save gitignore.
 !/.gitignore
+
+# Docker environment
+!.env
+
+# Ignore logs.
+/logs/
+
+# Ignore current state of nodes.
+/data/
