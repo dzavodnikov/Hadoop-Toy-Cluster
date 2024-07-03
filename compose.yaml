@@ -36,6 +36,8 @@ services:
             - 8088:8088 # YARN ResourceManager
             - 19888:19888 # MapReduce JobHistory Server
             - 8081:8081 # Azkaban
+            - 8082:8082 # Spark Web UI
+            - 18080:18080 # Spark History Server
             - 16010:16010 # HBase Web UI
             - 9090:9090 # HBase Thrift client
             - 9091:9091 # HBase Thrift Web UI
@@ -55,13 +57,16 @@ services:
             # Note: 2 extra logs (`azkaban-access.log` and `azkaban-webserver.log`) located in `/opt/azkaban`.
             - ./logs/master1/azkaban/:/var/log/azkaban/
             - ./data/master1/azkaban/:/data/azkaban/
+            # Spark.
+            - ./configs/spark/:/etc/spark/
+            - ./logs/master1/spark/:/var/log/spark/
             # HBase.
             - ./configs/hbase/:/etc/hbase/
             - ./logs/master1/hbase/:/var/log/hbase/
             # Apps.
             - ./logs/master1/apps/:/var/log/apps/
         healthcheck:
-            test: ports check 9870 8088 19888 8081 16010 9091 8090 8091
+            test: ports check 9870 8088 19888 8081 8082 18080 16010 9091 8090 8091
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -81,6 +86,7 @@ services:
                 ipv4_address: 172.18.3.1
         ports:
             - 8142:8042 # YARN NodeManager
+            - 8181:8081 # Spark Web UI
             - 16130:16030 # HBase Web UI
         volumes:
             # Basic script.
@@ -91,13 +97,17 @@ services:
             - ./configs/hadoop/:/etc/hadoop/
             - ./logs/worker1/hadoop/:/var/log/hadoop/
             - ./data/worker1/hadoop/:/data/hadoop/
+            # Spark.
+            - ./configs/spark/:/etc/spark/
+            - ./logs/worker1/spark/:/var/log/spark/
+            - ./data/worker1/spark/:/data/spark/
             # HBase.
             - ./configs/hbase/:/etc/hbase/
             - ./logs/worker1/hbase/:/var/log/hbase/
             # Apps.
             - ./logs/worker1/apps/:/var/log/apps/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -117,6 +127,7 @@ services:
                 ipv4_address: 172.18.3.2
         ports:
             - 8242:8042 # YARN NodeManager
+            - 8281:8081 # Spark Web UI
             - 16230:16030 # HBase Web UI
         volumes:
             # Basic script.
@@ -127,13 +138,17 @@ services:
             - ./configs/hadoop/:/etc/hadoop/
             - ./logs/worker2/hadoop/:/var/log/hadoop/
             - ./data/worker2/hadoop/:/data/hadoop/
+            # Spark.
+            - ./configs/spark/:/etc/spark/
+            - ./logs/worker2/spark/:/var/log/spark/
+            - ./data/worker2/spark/:/data/spark/
             # HBase.
             - ./configs/hbase/:/etc/hbase/
             - ./logs/worker2/hbase/:/var/log/hbase/
             # Apps.
             - ./logs/worker2/apps/:/var/log/apps/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -153,6 +168,7 @@ services:
                 ipv4_address: 172.18.3.3
         ports:
             - 8342:8042 # YARN NodeManager
+            - 8381:8081 # Spark Web UI
             - 16330:16030 # HBase Web UI
         volumes:
             # Basic script.
@@ -163,13 +179,17 @@ services:
             - ./configs/hadoop/:/etc/hadoop/
             - ./logs/worker3/hadoop/:/var/log/hadoop/
             - ./data/worker3/hadoop/:/data/hadoop/
+            # Spark.
+            - ./configs/spark/:/etc/spark/
+            - ./logs/worker3/spark/:/var/log/spark/
+            - ./data/worker3/spark/:/data/spark/
             # HBase.
             - ./configs/hbase/:/etc/hbase/
             - ./logs/worker3/hbase/:/var/log/hbase/
             # Apps.
             - ./logs/worker3/apps/:/var/log/apps/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins

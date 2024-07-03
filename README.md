@@ -9,6 +9,7 @@ It includes following services:
 -   Apache [Zookeeper 3.9.0](https://zookeeper.apache.org/doc/r3.9.0/)
 -   Apache [Hadoop 3.3.6](https://hadoop.apache.org/docs/r3.3.6/)
 -   [Azkaban 4.0.0](https://azkaban.readthedocs.io/en/latest/)
+-   Apache [Spark 3.5.1](https://spark.apache.org/docs/3.5.1/)
 -   Apache HBase 2.6.0 (Reference Guide exists only for [version 2.4](https://hbase.apache.org/2.4/book.html))
 
 ## Run
@@ -40,17 +41,22 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   YARN [ResourceManager](http://localhost:8088/cluster/nodes/)
     -   MapReduce JobHistory [Server](http://localhost:19888/jobhistory/app/)
     -   [Azkaban](http://localhost:8081/) (username/password is `azkaban/azkaban`)
+    -   Spark [Web UI](http://localhost:8082/)
+    -   Spark [History Server](http://localhost:18080/)
     -   HBase Master [Web UI](http://localhost:16010/)
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)
 -   `toy-worker1`:
     -   YARN [NodeManager](http://localhost:8142/)
+    -   Spark [Web UI](http://localhost:8181/)
     -   HBase RegionServer [Web UI](http://localhost:16130/)
 -   `toy-worker2`:
     -   YARN [NodeManager](http://localhost:8242/)
+    -   Spark [Web UI](http://localhost:8281/)
     -   HBase RegionServer [Web UI](http://localhost:16230/)
 -   `toy-worker3`:
     -   YARN [NodeManager](http://localhost:8342/)
+    -   Spark [Web UI](http://localhost:8381/)
     -   HBase RegionServer [Web UI](http://localhost:16330/)
 
 ## Run code examples on cluster

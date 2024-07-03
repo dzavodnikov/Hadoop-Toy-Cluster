@@ -30,6 +30,28 @@ cd /opt/azkaban && ./bin/start-solo.sh \
     > "${AZKABAN_LOG_DIR}/azkaban.log" 2>&1 \
     &
 
+# Spark starting.
+# See:
+#   https://spark.apache.org/docs/3.5.1/spark-standalone.html
+
+# Start the Master node.
+SPARK_SERVICE_PORT=7077
+SPARK_WEBUI_PORT=8082
+"${SPARK_HOME}/sbin/start-master.sh" \
+    --host          "$(hostname -f)" \
+    --port          "${SPARK_SERVICE_PORT}" \
+    --webui-port    "${SPARK_WEBUI_PORT}" \
+    > "${SPARK_LOG_DIR}/master.log" 2>&1
+
+# Create required HDFS directories.
+ports wait 9870
+hdfs dfs -mkdir -p /logs/spark/history
+hdfs dfs -mkdir -p /spark
+
+# Start the History server.
+"${SPARK_HOME}/sbin/start-history-server.sh" \
+    > "${SPARK_LOG_DIR}/history_server.log" 2>&1
+
 # HBase starting.
 # See:
 #   https://hbase.apache.org/2.4/book.html#_hbase_managed_zookeeper_configuration

@@ -12,6 +12,23 @@ hdfs --daemon start datanode \
 yarn --daemon start nodemanager \
     > "${HADOOP_LOG_DIR}/nodemanager.log" 2>&1
 
+# Spark starting.
+# See:
+#   https://spark.apache.org/docs/3.5.1/spark-standalone.html
+
+# Start the Worker node.
+SPARK_MASTER=spark://master1.toy:7077
+SPARK_SERVICE_PORT=7078
+SPARK_WEBUI_PORT=8081
+SPARK_WORK_DIR=/data/spark
+"${SPARK_HOME}/sbin/start-worker.sh" \
+    --host          "$(hostname -f)" \
+    --port          "${SPARK_SERVICE_PORT}" \
+    --webui-port    "${SPARK_WEBUI_PORT}" \
+    --work-dir      "${SPARK_WORK_DIR}" \
+    "${SPARK_MASTER}" \
+    > "${SPARK_LOG_DIR}/worker.log" 2>&1
+
 # HBase starting.
 # See:
 #   https://hbase.apache.org/2.4/book.html#_hbase_managed_zookeeper_configuration
