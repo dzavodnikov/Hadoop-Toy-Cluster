@@ -53,6 +53,21 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   YARN [NodeManager](http://localhost:8342/)
     -   HBase RegionServer [Web UI](http://localhost:16330/)
 
+## Run code example
+
+To execute local code examples run:
+
+```sh
+$ ./cmd_master1.sh
+```
+
+for connection to `master1` container (based on Oracle linux 9).
+
+That compose file connect your current directory as `/project` and `~/.m2/` as `/root/.m2`,
+so you can work with your local files and have all Maven settings and cache into the Docker container.
+
+See scripts in [examples](./examples/) directory that help you to run code.
+
 ## License
 
 Distributed under MIT License.

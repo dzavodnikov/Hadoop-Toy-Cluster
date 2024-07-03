@@ -12,3 +12,6 @@
 
 # Ignore current state of nodes.
 /data/
+
+# Ignore compiled Maven project.
+/target/
