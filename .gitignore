@@ -15,3 +15,9 @@
 
 # Ignore shared data.
 /shared/
+
+# Ignore compiled Maven project.
+/target/
+
+# Results from MapReduce.
+**/*_result/
