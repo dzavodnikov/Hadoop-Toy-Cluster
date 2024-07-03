@@ -1,0 +1,179 @@
+services:
+    zookeeper1:
+        image: bitnami/zookeeper:3.9.0
+        container_name: toy-zookeeper1
+        hostname: zookeeper1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.1.1
+        environment:
+            - ALLOW_ANONYMOUS_LOGIN=yes
+        volumes:
+            - ./data/zookeeper1/:/bitnami/zookeeper/data/
+
+    master1:
+        build:
+            context: docker
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_master.sh
+        depends_on:
+            - zookeeper1
+        container_name: toy-master1
+        environment:
+            CLUSTER_NAME: toy
+        hostname: master1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.2.1
+        extra_hosts:
+            # To avoid problem when HMaster passed to HRegionServers a different hostnames to use.
+            - worker1.toy:172.18.3.1
+            - worker2.toy:172.18.3.2
+            - worker3.toy:172.18.3.3
+        ports:
+            - 9870:9870 # HDFS NameNode
+            - 8088:8088 # YARN ResourceManager
+            - 19888:19888 # MapReduce JobHistory Server
+            - 16010:16010 # HBase Web UI
+            - 9090:9090 # HBase Thrift client
+            - 9091:9091 # HBase Thrift Web UI
+            - 8090:8090 # HBase REST client
+            - 8091:8091 # HBase REST Web UI
+        volumes:
+            # Basic script.
+            - ./docker/entrypoint_master.sh:/entrypoint_master.sh
+            # Shared folder.
+            - ./shared/master1/:/shared/
+            # Hadoop.
+            - ./configs/hadoop/:/etc/hadoop/
+            - ./logs/master1/hadoop/:/var/log/hadoop/
+            - ./data/master1/hadoop/:/data/hadoop/
+            # HBase.
+            - ./configs/hbase/:/etc/hbase/
+            - ./logs/master1/hbase/:/var/log/hbase/
+            # Apps.
+            - ./logs/master1/apps/:/var/log/apps/
+        healthcheck:
+            test: ports check 9870 8088 19888 16010 9091 8090 8091
+            start_period: 60s
+            timeout: 30s
+            # 10 mins
+            retries: 60
+            interval: 10s
+
+    worker1:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker1
+        hostname: worker1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.1
+        ports:
+            - 8142:8042 # YARN NodeManager
+            - 16130:16030 # HBase Web UI
+        volumes:
+            # Basic script.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            # Shared folder.
+            - ./shared/worker1/:/shared/
+            # Hadoop.
+            - ./configs/hadoop/:/etc/hadoop/
+            - ./logs/worker1/hadoop/:/var/log/hadoop/
+            - ./data/worker1/hadoop/:/data/hadoop/
+            # HBase.
+            - ./configs/hbase/:/etc/hbase/
+            - ./logs/worker1/hbase/:/var/log/hbase/
+            # Apps.
+            - ./logs/worker1/apps/:/var/log/apps/
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins
+            retries: 60
+            interval: 10s
+
+    worker2:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker2
+        hostname: worker2.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.2
+        ports:
+            - 8242:8042 # YARN NodeManager
+            - 16230:16030 # HBase Web UI
+        volumes:
+            # Basic script.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            # Shared folder.
+            - ./shared/worker2/:/shared/
+            # Hadoop.
+            - ./configs/hadoop/:/etc/hadoop/
+            - ./logs/worker2/hadoop/:/var/log/hadoop/
+            - ./data/worker2/hadoop/:/data/hadoop/
+            # HBase.
+            - ./configs/hbase/:/etc/hbase/
+            - ./logs/worker2/hbase/:/var/log/hbase/
+            # Apps.
+            - ./logs/worker2/apps/:/var/log/apps/
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins
+            retries: 60
+            interval: 10s
+
+    worker3:
+        image: toy-hadoop
+        pull_policy: never
+        entrypoint: /entrypoint_worker.sh
+        depends_on:
+            - master1
+        container_name: toy-worker3
+        hostname: worker3.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.3
+        ports:
+            - 8342:8042 # YARN NodeManager
+            - 16330:16030 # HBase Web UI
+        volumes:
+            # Basic script.
+            - ./docker/entrypoint_worker.sh:/entrypoint_worker.sh
+            # Shared folder.
+            - ./shared/worker3/:/shared/
+            # Hadoop.
+            - ./configs/hadoop/:/etc/hadoop/
+            - ./logs/worker3/hadoop/:/var/log/hadoop/
+            - ./data/worker3/hadoop/:/data/hadoop/
+            # HBase.
+            - ./configs/hbase/:/etc/hbase/
+            - ./logs/worker3/hbase/:/var/log/hbase/
+            # Apps.
+            - ./logs/worker3/apps/:/var/log/apps/
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins
+            retries: 60
+            interval: 10s
+
+networks:
+    toy-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/16
+                  gateway: 172.18.0.1
