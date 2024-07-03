@@ -28,6 +28,17 @@ COPY ${AZKABAN_ARCH} /
 RUN tar -xf ${AZKABAN_ARCH} && mv /azkaban /opt/azkaban
 ENV AZKABAN_LOG_DIR=/var/log/azkaban
 
+# Spark.
+ARG SPARK_VER=3.5.1
+ARG SPARK_DISTR=spark-${SPARK_VER}-bin-without-hadoop
+ARG SPARK_ARCH=${SPARK_DISTR}.tgz
+RUN wget https://dlcdn.apache.org/spark/spark-${SPARK_VER}/${SPARK_ARCH}
+RUN tar -xf ${SPARK_ARCH} && mv ${SPARK_DISTR} /usr/local/spark
+ENV SPARK_HOME=/usr/local/spark
+ENV SPARK_CONF_DIR=/etc/spark
+ENV SPARK_LOG_DIR=/var/log/spark
+ENV PATH=${PATH}:${SPARK_HOME}/bin
+
 # HBase.
 ARG HBASE_VER=2.6.0
 ARG HBASE_DISTR=hbase-${HBASE_VER}
