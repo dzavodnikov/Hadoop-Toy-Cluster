@@ -35,6 +35,7 @@ services:
             - 9870:9870 # HDFS NameNode
             - 8088:8088 # YARN ResourceManager
             - 19888:19888 # MapReduce JobHistory Server
+            - 8081:8081 # Azkaban
             - 16010:16010 # HBase Web UI
             - 9090:9090 # HBase Thrift client
             - 9091:9091 # HBase Thrift Web UI
@@ -49,13 +50,18 @@ services:
             - ./configs/hadoop/:/etc/hadoop/
             - ./logs/master1/hadoop/:/var/log/hadoop/
             - ./data/master1/hadoop/:/data/hadoop/
+            # Azkaban.
+            - ./configs/azkaban/:/opt/azkaban/conf/
+            # Note: 2 extra logs (`azkaban-access.log` and `azkaban-webserver.log`) located in `/opt/azkaban`.
+            - ./logs/master1/azkaban/:/var/log/azkaban/
+            - ./data/master1/azkaban/:/data/azkaban/
             # HBase.
             - ./configs/hbase/:/etc/hbase/
             - ./logs/master1/hbase/:/var/log/hbase/
             # Apps.
             - ./logs/master1/apps/:/var/log/apps/
         healthcheck:
-            test: ports check 9870 8088 19888 16010 9091 8090 8091
+            test: ports check 9870 8088 19888 8081 16010 9091 8090 8091
             start_period: 60s
             timeout: 30s
             # 10 mins

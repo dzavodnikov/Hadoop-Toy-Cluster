@@ -1,0 +1,2 @@
+type=command
+command=bash -c '${HADOOP_RUN} pro.zavodnikov.mapreduce.WordCount --input ${WC_INPUT} --output ${WC_OUTPUT}'

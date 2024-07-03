@@ -20,6 +20,14 @@ ENV HADOOP_LOG_DIR=/var/log/hadoop
 RUN mkdir ${HADOOP_LOG_DIR}
 ENV PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
 
+# Azkaban.
+ARG AZKABAN_VER=4.0.0
+ARG AZKABAN_DISTR=azkaban-${AZKABAN_VER}
+ARG AZKABAN_ARCH=${AZKABAN_DISTR}.tar.gz
+COPY ${AZKABAN_ARCH} /
+RUN tar -xf ${AZKABAN_ARCH} && mv /azkaban /opt/azkaban
+ENV AZKABAN_LOG_DIR=/var/log/azkaban
+
 # HBase.
 ARG HBASE_VER=2.6.0
 ARG HBASE_DISTR=hbase-${HBASE_VER}
