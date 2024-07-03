@@ -3,3 +3,15 @@
 
 # Save gitignore.
 !/.gitignore
+
+# Ignore logs.
+/logs/
+
+# Ignore current state of nodes.
+/data/
+
+# Ignore logs.
+/logs/
+
+# Ignore shared data.
+/shared/
