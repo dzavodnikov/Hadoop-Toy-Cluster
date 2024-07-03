@@ -1,0 +1,197 @@
+services:
+    zookeeper1:
+        image: zookeeper:3.9.4
+        container_name: toy-zookeeper1
+        hostname: zookeeper1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.1.1
+        environment:
+            - ZOO_MY_ID=1
+            - ZOO_SERVERS=server.1=zookeeper1.toy:2888:3888;2181
+        volumes:
+            - ./data/${CLUSTER_VERSION}/zookeeper1/data/:/data/
+            - ./data/${CLUSTER_VERSION}/zookeeper1/datalog/:/datalog/
+
+    master1:
+        build:
+            context: docker
+        image: toy-hadoop:${CLUSTER_VERSION}
+        pull_policy: never
+        depends_on:
+            - zookeeper1
+        container_name: toy-master1
+        environment:
+            CLUSTER_NAME: toy
+        hostname: master1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.2.1
+        extra_hosts:
+            # To avoid problem when HMaster passed to HRegionServers a different hostnames to use.
+            - worker1.toy:172.18.3.1
+            - worker2.toy:172.18.3.2
+            - worker3.toy:172.18.3.3
+        ports:
+            - 9870:9870 # HDFS NameNode.
+            - 8088:8088 # YARN ResourceManager.
+            - 19888:19888 # MapReduce JobHistory Server.
+            - 16010:16010 # HBase Web UI.
+            - 9090:9090 # HBase Thrift client.
+            - 9091:9091 # HBase Thrift Web UI.
+            - 8090:8090 # HBase REST client.
+            - 8091:8091 # HBase REST Web UI.
+        volumes:
+            # Entrypoint.
+            - ./docker/entrypoint-master.sh:/entrypoint.sh
+            # Shared folders.
+            - .:/project
+            - ${HOME}/.m2/:/root/.m2
+            - ./logs/${CLUSTER_VERSION}/master1:/var/log
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+            - ./configs/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/workers:/usr/local/hadoop/etc/hadoop/workers
+            # Hadoop state.
+            - ./data/${CLUSTER_VERSION}/master1/hadoop/:/data/hadoop/
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
+            - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
+            - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+        healthcheck:
+            test: ports check 9870 8088 19888 16010 9091 8090 8091
+            start_period: 60s
+            timeout: 30s
+            # 10 mins.
+            retries: 60
+            interval: 10s
+
+    worker1:
+        image: toy-hadoop:${CLUSTER_VERSION}
+        pull_policy: never
+        depends_on:
+            - master1
+        container_name: toy-worker1
+        hostname: worker1.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.1
+        ports:
+            - 8142:8042 # YARN NodeManager.
+            - 16130:16030 # HBase Web UI.
+        volumes:
+            # Entrypoint.
+            - ./docker/entrypoint-worker.sh:/entrypoint.sh
+            # Shared folders.
+            - .:/project
+            - ${HOME}/.m2/:/root/.m2
+            - ./logs/${CLUSTER_VERSION}/worker1:/var/log
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+            - ./configs/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/workers:/usr/local/hadoop/etc/hadoop/workers
+            # Hadoop state.
+            - ./data/${CLUSTER_VERSION}/worker1/hadoop/:/data/hadoop/
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
+            - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
+            - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins.
+            retries: 60
+            interval: 10s
+
+    worker2:
+        image: toy-hadoop:${CLUSTER_VERSION}
+        pull_policy: never
+        depends_on:
+            - master1
+        container_name: toy-worker2
+        hostname: worker2.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.2
+        ports:
+            - 8242:8042 # YARN NodeManager.
+            - 16230:16030 # HBase Web UI.
+        volumes:
+            # Entrypoint.
+            - ./docker/entrypoint-worker.sh:/entrypoint.sh
+            # Shared folders.
+            - .:/project
+            - ${HOME}/.m2/:/root/.m2
+            - ./logs/${CLUSTER_VERSION}/worker2:/var/log
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+            - ./configs/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/workers:/usr/local/hadoop/etc/hadoop/workers
+            # Hadoop state
+            - ./data/${CLUSTER_VERSION}/worker2/hadoop/:/data/hadoop/
+            # HBase configs
+            - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
+            - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
+            - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins.
+            retries: 60
+            interval: 10s
+
+    worker3:
+        image: toy-hadoop:${CLUSTER_VERSION}
+        pull_policy: never
+        depends_on:
+            - master1
+        container_name: toy-worker3
+        hostname: worker3.toy
+        networks:
+            toy-network:
+                ipv4_address: 172.18.3.3
+        ports:
+            - 8342:8042 # YARN NodeManager.
+            - 16330:16030 # HBase Web UI.
+        volumes:
+            # Entrypoint.
+            - ./docker/entrypoint-worker.sh:/entrypoint.sh
+            # Shared folders.
+            - .:/project
+            - ${HOME}/.m2/:/root/.m2
+            - ./logs/${CLUSTER_VERSION}/worker3:/var/log
+            # Hadoop configs.
+            - ./configs/hadoop/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+            - ./configs/hadoop/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+            - ./configs/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+            - ./configs/hadoop/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+            - ./configs/hadoop/workers:/usr/local/hadoop/etc/hadoop/workers
+            # Hadoop state.
+            - ./data/${CLUSTER_VERSION}/worker3/hadoop/:/data/hadoop/
+            # HBase configs.
+            - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
+            - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
+            - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+        healthcheck:
+            test: ports check 8042 16030
+            start_period: 60s
+            timeout: 30s
+            # 10 mins.
+            retries: 60
+            interval: 10s
+
+networks:
+    toy-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/16
+                  gateway: 172.18.0.1
