@@ -121,3 +121,20 @@ function hadoop_run() {
         "-Dlog4j.configuration=file:${APP_DIR}/log4j.properties" \
     "${MISC}"
 }
+
+function spark_run() {
+    local NAME=${1}
+    local CLASS=${2}
+    local MISC=${*:3}
+
+    CLASSPATH="${APP_DIR}/*:"
+    in_container "${MASTER1}" \
+        spark-submit \
+        --master yarn \
+        "--conf spark.driver.extraClassPath=${CLASSPATH}" \
+        "--conf spark.executor.extraClassPath=${CLASSPATH}" \
+        "--name ${NAME}" \
+        "--class ${CLASS}" \
+        "${APP_DIR}/${APP_NAME}-${APP_VERSION}.jar" \
+        "${MISC}"
+}
