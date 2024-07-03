@@ -25,6 +25,11 @@ yarn    --daemon start proxyserver \
 mapred  --daemon start historyserver \
     > "${HADOOP_LOG_DIR}/historyserver.log" 2>&1
 
+# Azkaban starting. Looking for 'azkaban.properties' config in current directory.
+cd /opt/azkaban && ./bin/start-solo.sh \
+    > "${AZKABAN_LOG_DIR}/azkaban.log" 2>&1 \
+    &
+
 # HBase starting.
 # See:
 #   https://hbase.apache.org/2.4/book.html#_hbase_managed_zookeeper_configuration
