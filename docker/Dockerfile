@@ -51,6 +51,18 @@ ENV HBASE_LOG_DIR=/var/log/hbase
 RUN mkdir ${HBASE_LOG_DIR}
 ENV PATH=${PATH}:${HBASE_HOME}/bin
 
+# Hive.
+ARG HIVE_VER=3.1.3
+ARG HIVE_DISTR=apache-hive-${HIVE_VER}-bin
+ARG HIVE_ARCH=${HIVE_DISTR}.tar.gz
+RUN wget https://archive.apache.org/dist/hive/hive-${HIVE_VER}/${HIVE_ARCH}
+RUN tar -xf ${HIVE_ARCH} && mv ${HIVE_DISTR} /usr/local/hive
+ENV HIVE_HOME=/usr/local/hive
+ENV HIVE_CONF_DIR=/etc/hive
+ENV HIVE_LOG_DIR=/var/log/hive
+RUN mkdir ${HIVE_LOG_DIR}
+ENV PATH=${PATH}:${HIVE_HOME}/bin
+
 # Utility scripts.
 COPY ./ports.sh /usr/bin/ports
 
