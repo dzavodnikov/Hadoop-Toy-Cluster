@@ -8,6 +8,7 @@ It includes following services:
 
 -   Apache [Zookeeper 3.9.3](https://zookeeper.apache.org/doc/r3.9.3/)
 -   Apache [Hadoop 3.3.5](https://hadoop.apache.org/docs/r3.3.5/)
+-   [Azkaban 4.0.0](https://azkaban.readthedocs.io/en/latest/)
 -   Apache HBase 2.6.1 (Reference Guide exists only for [version 2.4](https://hbase.apache.org/2.4/book.html))
 
 ## Run
@@ -38,6 +39,7 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   HDFS [NameNode](http://localhost:9870/explorer.html)
     -   YARN [ResourceManager](http://localhost:8088/cluster/nodes/)
     -   MapReduce JobHistory [Server](http://localhost:19888/jobhistory/app/)
+    -   [Azkaban](http://localhost:8081/) (username/password is `azkaban/azkaban`)
     -   HBase Master [Web UI](http://localhost:16010/)
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)

@@ -30,6 +30,15 @@ mapred  --daemon start historyserver \
     > "${HADOOP_LOG_DIR}/historyserver.log" 2>&1
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Azkaban
+# ----------------------------------------------------------------------------------------------------------------------
+# Looking for 'azkaban.properties' config in current directory.
+# There are 2 extra logs: `/opt/azkaban/azkaban-access.log` and `/opt/azkaban/azkaban-webserver.log`
+cd /opt/azkaban && ./bin/start-solo.sh \
+    > /var/log/azkaban.log 2>&1 \
+    &
+
+# ----------------------------------------------------------------------------------------------------------------------
 # HBase
 # See:
 #   https://hbase.apache.org/2.4/book.html#_hbase_managed_zookeeper_configuration
