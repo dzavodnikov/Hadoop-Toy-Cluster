@@ -1,0 +1,2 @@
+type=command
+command=bash -c '${HADOOP_RUN} -Dlog4j.configuration=file:${APP_DIR}/log4j.properties pro.zavodnikov.mapreduce.WordCount --input ${INPUT} --output ${OUTPUT}'
