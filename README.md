@@ -9,6 +9,7 @@ It includes following services:
 -   Apache [Zookeeper 3.9.4](https://zookeeper.apache.org/doc/r3.9.4/)
 -   Apache [Hadoop 3.4.2](https://hadoop.apache.org/docs/r3.4.2/)
 -   Apache HBase 2.6.4 (Reference Guide exists only for [version 2.4](https://hbase.apache.org/2.4/book.html))
+-   [Azkaban 4.0.0](https://azkaban.readthedocs.io/en/latest/)
 
 ## Run
 
@@ -41,6 +42,7 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   HBase Master [Web UI](http://localhost:16010/)
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)
+    -   [Azkaban](http://localhost:8081/) (username/password is `azkaban/azkaban`)
 -   `toy-worker1`:
     -   YARN [NodeManager](http://localhost:8142/)
     -   HBase RegionServer [Web UI](http://localhost:16130/)

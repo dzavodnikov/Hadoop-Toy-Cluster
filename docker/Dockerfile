@@ -56,6 +56,19 @@ ENV HBASE_LOG_DIR=/var/log/hbase
 ENV PATH=${PATH}:${HBASE_HOME}/bin
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Azkaban.
+# ----------------------------------------------------------------------------------------------------------------------
+# Azkaban supports only Java 11.
+RUN dnf -y install java-11-openjdk
+
+ARG AZKABAN_VER=4.0.0
+ARG AZKABAN_DISTR=azkaban-${AZKABAN_VER}
+ARG AZKABAN_ARCH=${AZKABAN_DISTR}.tar.gz
+COPY ${AZKABAN_ARCH} /
+RUN tar -xf ${AZKABAN_ARCH} && mv /azkaban /opt/azkaban
+RUN rm -rf "${AZKABAN_ARCH}"
+
+# ----------------------------------------------------------------------------------------------------------------------
 # Utils.
 # ----------------------------------------------------------------------------------------------------------------------
 RUN dnf -y install hostname
