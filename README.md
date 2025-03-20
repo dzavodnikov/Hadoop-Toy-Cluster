@@ -68,6 +68,11 @@ so you can work with your local files and have all Maven settings and cache into
 
 See scripts in [examples](./examples/) directory that help you to run code.
 
+## Run code with Azkaban
+
+To run Hadoop examples you are also can use Azkaban. Just build project with proper `src/assembly/distribution.xml`
+config file that has `*.job` and `*.properties` files in a root of your ZIP-archive. Then upload it to Azkaban Web UI.
+
 ## License
 
 Distributed under MIT License.
