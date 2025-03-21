@@ -13,3 +13,7 @@ cd /project/examples/mapreduce \
 && ./upload_input.sh \
 && ./run_word-count.sh \
 && ./download_output.sh
+
+# 4. Run Spark example.
+cd /project/examples \
+&& ./spark.sh
