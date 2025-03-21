@@ -36,6 +36,8 @@ services:
             - 8088:8088 # YARN ResourceManager
             - 19888:19888 # MapReduce JobHistory Server
             - 8081:8081 # Azkaban
+            - 8082:8082 # Spark Web UI
+            - 18080:18080 # Spark History Server
             - 16010:16010 # HBase Web UI
             - 9090:9090 # HBase Thrift client
             - 9091:9091 # HBase Thrift Web UI
@@ -60,12 +62,16 @@ services:
             - ./configs/azkaban/azkaban.properties:/opt/azkaban/conf/azkaban.properties
             # Azkaban state
             - ./data/${CLUSTER_VERSION}/master1/azkaban/:/data/azkaban/
+            # Spark configs
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
             # HBase configs
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
         healthcheck:
-            test: ports check 9870 8088 19888 8081 16010 9091 8090 8091
+            test: ports check 9870 8088 19888 8081 8082 18080 16010 9091 8090 8091
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -85,6 +91,7 @@ services:
                 ipv4_address: 172.18.3.1
         ports:
             - 8142:8042 # YARN NodeManager
+            - 8181:8081 # Spark Web UI
             - 16130:16030 # HBase Web UI
         volumes:
             # Shared folders
@@ -100,12 +107,18 @@ services:
             - ./configs/hadoop/log4j.properties:/usr/local/hadoop/etc/hadoop/log4j.properties
             # Hadoop state
             - ./data/worker1/hadoop/:/data/hadoop/
+            # Spark configs
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state
+            - ./data/worker1/spark/:/data/spark/
             # HBase configs
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -125,6 +138,7 @@ services:
                 ipv4_address: 172.18.3.2
         ports:
             - 8242:8042 # YARN NodeManager
+            - 8281:8081 # Spark Web UI
             - 16230:16030 # HBase Web UI
         volumes:
             # Shared folders
@@ -140,12 +154,18 @@ services:
             - ./configs/hadoop/log4j.properties:/usr/local/hadoop/etc/hadoop/log4j.properties
             # Hadoop state
             - ./data/worker2/hadoop/:/data/hadoop/
+            # Spark configs
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state
+            - ./data/worker2/spark/:/data/spark/
             # HBase configs
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins
@@ -165,6 +185,7 @@ services:
                 ipv4_address: 172.18.3.3
         ports:
             - 8342:8042 # YARN NodeManager
+            - 8381:8081 # Spark Web UI
             - 16330:16030 # HBase Web UI
         volumes:
             # Shared folders
@@ -180,12 +201,18 @@ services:
             - ./configs/hadoop/log4j.properties:/usr/local/hadoop/etc/hadoop/log4j.properties
             # Hadoop state
             - ./data/worker3/hadoop/:/data/hadoop/
+            # Spark configs
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state
+            - ./data/worker3/spark/:/data/spark/
             # HBase configs
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 8081 16030
             start_period: 60s
             timeout: 30s
             # 10 mins
