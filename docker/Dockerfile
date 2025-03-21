@@ -61,6 +61,20 @@ ENV HBASE_LOG_DIR=/var/log/hbase
 ENV PATH=${PATH}:${HBASE_HOME}/bin
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Spark.
+# ----------------------------------------------------------------------------------------------------------------------
+ARG SPARK_VER=3.5.8
+ARG SPARK_DISTR=spark-${SPARK_VER}-bin-without-hadoop
+ARG SPARK_ARCH=${SPARK_DISTR}.tgz
+RUN curl -L -O "https://downloads.apache.org/spark/spark-${SPARK_VER}/${SPARK_ARCH}"
+RUN tar -xf "${SPARK_ARCH}" && mv "${SPARK_DISTR}" /usr/local/spark
+RUN rm -rf "${SPARK_ARCH}"
+ENV SPARK_HOME=/usr/local/spark
+ENV SPARK_CONF_DIR=/etc/spark
+ENV SPARK_LOG_DIR=/var/log/spark
+ENV PATH="${PATH}:${SPARK_HOME}/bin"
+
+# ----------------------------------------------------------------------------------------------------------------------
 # Scripts.
 # ----------------------------------------------------------------------------------------------------------------------
 COPY ./ports.sh /usr/bin/ports
