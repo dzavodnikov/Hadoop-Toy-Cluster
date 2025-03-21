@@ -52,6 +52,20 @@ RUN tar -xf ${AZKABAN_ARCH} && mv /azkaban /opt/azkaban
 RUN rm -rf "${AZKABAN_ARCH}"
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Spark
+# ----------------------------------------------------------------------------------------------------------------------
+ARG SPARK_VER=3.5.5
+ARG SPARK_DISTR=spark-${SPARK_VER}-bin-without-hadoop
+ARG SPARK_ARCH=${SPARK_DISTR}.tgz
+RUN curl -L -O "https://dlcdn.apache.org/spark/spark-${SPARK_VER}/${SPARK_ARCH}"
+RUN tar -xf "${SPARK_ARCH}" && mv "${SPARK_DISTR}" /usr/local/spark
+RUN rm -rf "${SPARK_ARCH}"
+ENV SPARK_HOME=/usr/local/spark
+ENV SPARK_CONF_DIR=/etc/spark
+ENV SPARK_LOG_DIR=/var/log/spark
+ENV PATH="${PATH}:${SPARK_HOME}/bin"
+
+# ----------------------------------------------------------------------------------------------------------------------
 # HBase
 # ----------------------------------------------------------------------------------------------------------------------
 ARG HBASE_VER=2.6.1
