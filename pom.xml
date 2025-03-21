@@ -18,6 +18,12 @@
 
         <!-- Compatible with  Hadoop 3.4.2. -->
         <hbase.version>2.6.4-hadoop3</hbase.version>
+
+        <spark.version>3.5.7</spark.version>
+
+        <!-- Same as Spark 3.5.7. -->
+        <scala.major.version>2.12</scala.major.version>
+        <scala.version>${scala.major.version}.20</scala.version>
     </properties>
 
     <dependencies>
@@ -50,6 +56,34 @@
             <artifactId>hbase-client</artifactId>
             <version>${hbase.version}</version>
         </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.major.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.major.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.spark/spark-streaming -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_${scala.major.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.spark/spark-yarn -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-yarn_${scala.major.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -73,6 +107,34 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- To build Scala code from Maven without installation Scala compiler. -->
+            <!-- Source: https://mvnrepository.com/artifact/net.alchim31.maven/scala-maven-plugin -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.9.9</version>
+                <configuration>
+                    <scalaVersion>${scala.minor.version}</scalaVersion>
+                    <!-- Can be 'Mixed' (default), 'JavaThenScala', or 'ScalaThenJava'. -->
+                    <compileOrder>Mixed</compileOrder>
+                    <!-- Can be 'all', 'incremental' (default). -->
+                    <recompileMode>all</recompileMode>
+                    <!-- See: https://davidb.github.io/scala-maven-plugin/compile-mojo.html -->
+                    <args>
+                        <arg>--deprecation</arg>
+                        <arg>--unchecked</arg>
+                    </args>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
