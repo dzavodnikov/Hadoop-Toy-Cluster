@@ -56,6 +56,32 @@ hbase rest      start \
     &
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Spark.
+# See:
+#   https://spark.apache.org/docs/3.5.5/spark-standalone.html
+# ----------------------------------------------------------------------------------------------------------------------
+# Create log dir.
+mkdir -p "${SPARK_LOG_DIR}"
+
+# Start the Master node.
+SPARK_SERVICE_PORT=7077
+SPARK_WEBUI_PORT=8082
+"${SPARK_HOME}/sbin/start-master.sh" \
+    --host          "$(hostname -f)" \
+    --port          "${SPARK_SERVICE_PORT}" \
+    --webui-port    "${SPARK_WEBUI_PORT}" \
+    > "${SPARK_LOG_DIR}/master.log" 2>&1
+
+# Create required HDFS directories.
+ports wait 9870
+hdfs dfs -mkdir -p /logs/spark/history
+hdfs dfs -mkdir -p /spark
+
+# Start the History server.
+"${SPARK_HOME}/sbin/start-history-server.sh" \
+    > "${SPARK_LOG_DIR}/history_server.log" 2>&1
+
+# ----------------------------------------------------------------------------------------------------------------------
 # Run container.
 # ----------------------------------------------------------------------------------------------------------------------
 sleep infinity

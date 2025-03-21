@@ -9,6 +9,7 @@ It includes following services:
 -   Apache [Zookeeper 3.9.4](https://zookeeper.apache.org/doc/r3.9.4/)
 -   Apache [Hadoop 3.4.2](https://hadoop.apache.org/docs/r3.4.2/)
 -   Apache HBase 2.6.4 (Reference Guide exists only for [version 2.4](https://hbase.apache.org/2.4/book.html))
+-   Apache [Spark 3.5.7](https://spark.apache.org/docs/3.5.7/)
 
 Hadoop requires [Java 11](https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions).
 
@@ -43,15 +44,20 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   HBase Master [Web UI](http://localhost:16010/)
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)
+    -   Spark [Web UI](http://localhost:8082/)
+    -   Spark [History Server](http://localhost:18080/)
 -   `toy-worker1`:
     -   YARN [NodeManager](http://localhost:8142/)
     -   HBase RegionServer [Web UI](http://localhost:16130/)
+    -   Spark [Web UI](http://localhost:8181/)
 -   `toy-worker2`:
     -   YARN [NodeManager](http://localhost:8242/)
     -   HBase RegionServer [Web UI](http://localhost:16230/)
+    -   Spark [Web UI](http://localhost:8281/)
 -   `toy-worker3`:
     -   YARN [NodeManager](http://localhost:8342/)
     -   HBase RegionServer [Web UI](http://localhost:16330/)
+    -   Spark [Web UI](http://localhost:8381/)
 
 ## Run code example
 

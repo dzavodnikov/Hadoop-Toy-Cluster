@@ -41,6 +41,8 @@ services:
             - 9091:9091 # HBase Thrift Web UI.
             - 8090:8090 # HBase REST client.
             - 8091:8091 # HBase REST Web UI.
+            - 8082:8082 # Spark Web UI.
+            - 18080:18080 # Spark History Server.
         volumes:
             # Entrypoint.
             - ./docker/entrypoint-master.sh:/entrypoint.sh
@@ -60,8 +62,12 @@ services:
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+            # Spark configs
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
         healthcheck:
-            test: ports check 9870 8088 19888 16010 9091 8090 8091
+            test: ports check 9870 8088 19888 16010 9091 8090 8091 8082 18080
             start_period: 60s
             timeout: 30s
             # 10 mins.
@@ -81,6 +87,7 @@ services:
         ports:
             - 8142:8042 # YARN NodeManager.
             - 16130:16030 # HBase Web UI.
+            - 8181:8081 # Spark Web UI
         volumes:
             # Entrypoint.
             - ./docker/entrypoint-worker.sh:/entrypoint.sh
@@ -100,8 +107,14 @@ services:
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+            # Spark configs.
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state.
+            - ./data/${CLUSTER_VERSION}/worker1/spark/:/data/spark/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 16030 8081
             start_period: 60s
             timeout: 30s
             # 10 mins.
@@ -121,6 +134,7 @@ services:
         ports:
             - 8242:8042 # YARN NodeManager.
             - 16230:16030 # HBase Web UI.
+            - 8281:8081 # Spark Web UI
         volumes:
             # Entrypoint.
             - ./docker/entrypoint-worker.sh:/entrypoint.sh
@@ -140,8 +154,14 @@ services:
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+            # Spark configs.
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state.
+            - ./data/${CLUSTER_VERSION}/worker2/spark/:/data/spark/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 16030 8081
             start_period: 60s
             timeout: 30s
             # 10 mins.
@@ -161,6 +181,7 @@ services:
         ports:
             - 8342:8042 # YARN NodeManager.
             - 16330:16030 # HBase Web UI.
+            - 8381:8081 # Spark Web UI.
         volumes:
             # Entrypoint.
             - ./docker/entrypoint-worker.sh:/entrypoint.sh
@@ -180,8 +201,14 @@ services:
             - ./configs/hbase/hbase-site.xml:/usr/local/hbase/conf/hbase-site.xml
             - ./configs/hbase/log4j2.properties:/usr/local/hbase/conf/log4j2.properties
             - ./configs/hbase/regionservers:/usr/local/hbase/conf/regionservers
+            # Spark configs.
+            - ./configs/spark/spark-env.sh:/etc/spark/spark-env.sh
+            - ./configs/spark/spark-defaults.conf:/etc/spark/spark-defaults.conf
+            - ./configs/spark/log4j2.properties:/etc/spark/log4j2.properties
+            # Spark state.
+            - ./data/${CLUSTER_VERSION}/worker3/spark/:/data/spark/
         healthcheck:
-            test: ports check 8042 16030
+            test: ports check 8042 16030 8081
             start_period: 60s
             timeout: 30s
             # 10 mins.
