@@ -10,6 +10,7 @@ It includes following services:
 -   Apache [Hadoop 3.4.2](https://hadoop.apache.org/docs/r3.4.2/)
 -   Apache HBase 2.6.4 (Reference Guide exists only for [version 2.4](https://hbase.apache.org/2.4/book.html))
 -   [Azkaban 4.0.0](https://azkaban.readthedocs.io/en/latest/)
+-   Apache [Spark 3.5.7](https://spark.apache.org/docs/3.5.7/)
 
 ## Run
 
@@ -43,15 +44,20 @@ _Note:_ If you want clean-up all working data just execute `$ ./clean.sh` script
     -   HBase Thrift2 [Web UI](http://localhost:9091/)
     -   HBase REST [Web UI](http://localhost:8091/)
     -   [Azkaban](http://localhost:8081/) (username/password is `azkaban/azkaban`)
+    -   Spark [Web UI](http://localhost:8082/)
+    -   Spark [History Server](http://localhost:18080/)
 -   `toy-worker1`:
     -   YARN [NodeManager](http://localhost:8142/)
     -   HBase RegionServer [Web UI](http://localhost:16130/)
+    -   Spark [Web UI](http://localhost:8181/)
 -   `toy-worker2`:
     -   YARN [NodeManager](http://localhost:8242/)
     -   HBase RegionServer [Web UI](http://localhost:16230/)
+    -   Spark [Web UI](http://localhost:8281/)
 -   `toy-worker3`:
     -   YARN [NodeManager](http://localhost:8342/)
     -   HBase RegionServer [Web UI](http://localhost:16330/)
+    -   Spark [Web UI](http://localhost:8381/)
 
 ## Run code example
 
